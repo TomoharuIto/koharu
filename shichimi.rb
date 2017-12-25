@@ -3,6 +3,7 @@ require 'net/http'
 require 'uri'
 require 'json'
 require 'date'
+require 'clockwork'
 require 'pp'
 
 h = File.open("data.json"){|f| JSON.load(f)}
@@ -17,10 +18,14 @@ json = Net::HTTP.get(uri_matsumoto)
 result = JSON.parse(json)
 public_time = result['description']['publicTime']
 date_time = DateTime.parse(public_time)
-suffix = ["お", "を", "の", "もふ", "よ", "のよ", "と",]
-announcement_time = date_time.strftime("%m月%d日 %H:%M 発表の長野県内の気象情報です#{suffix.sample}。\n\n")
-weather_forecast = result['description']['text']
-announcing = (announcement_time << weather_forecast).scan(/.{1,139}。$/m).reverse
-announcing.each do |par|
-  client_rest.update(par)
-end
+suffix = %w(お を の もふ よ ぽ と)
+announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報です#{suffix.sample}。\n\n")
+weather = result['description']['text']
+weather_forecast = (announcement_time << weather).scan(/.{1,139}。$/m).reverse
+pp weather_forecast
+# include Clockwork
+#   every(1.day, 'shichimi', :at => '06:00') do
+    weather_forecast.each do |par|
+      client_rest.update(par)
+    end
+#   end
