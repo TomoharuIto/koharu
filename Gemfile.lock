@@ -16,6 +16,7 @@ GEM
     date (1.0.0)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
+    dotenv (2.2.1)
     equalizer (0.0.11)
     http (3.0.0)
       addressable (~> 2.3)
@@ -70,6 +71,7 @@ PLATFORMS
 DEPENDENCIES
   clockwork
   date
+  dotenv
   json
   sinatra
   twitter
