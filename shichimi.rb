@@ -22,16 +22,41 @@ client_streaming = Twitter::Streaming::Client.new(
   access_token_secret: ENV['ACCESS_TOKEN_SECRET']
 )
 
-uri_nagano = URI.parse('http://weather.livedoor.com/forecast/webservice/json/v1?city=200010')
-uri_matsumoto = URI.parse('http://weather.livedoor.com/forecast/webservice/json/v1?city=200020')
-uri_iida = URI.parse('http://weather.livedoor.com/forecast/webservice/json/v1?city=200030')
-json = Net::HTTP.get(uri_matsumoto)
-result = JSON.parse(json)
-public_time = result['description']['publicTime']
+module Inquiry
+  def call(i)
+    path = "#{self}#{i}"
+    uri = URI.parse(path)
+    json = Net::HTTP.get(uri)
+    JSON.parse(json)
+  end
+end
+
+# Weather report API provided by Weather Hacks
+# http://weather.livedoor.com/weather_hacks/webservice
+
+weather_info = "http://weather.livedoor.com/forecast/webservice/json/v1?city="
+include Inquiry
+north = weather_info.call(200010)
+central = weather_info.call(200020)
+south = weather_info.call(200030)
+region = north['pinpointLocations']|central['pinpointLocations']|south['pinpointLocations']
+
+# location = /松本/
+# location_match = region.select{|area| area['name'] =~ location}
+# location_match[0].each_value{|val| pp val}
+
+client_streaming.user do |status|
+  case status
+  when Twitter::DirectMessage
+      puts status.full_text
+    end
+  end
+
+public_time = central['description']['publicTime']
 date_time = DateTime.parse(public_time)
 suffix = %w(お を の もふ よ ぽ と)
 announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報です#{suffix.sample}。\n\n")
-weather = result['description']['text']
+weather = central['description']['text']
 weather_forecast = (announcement_time << weather).scan(/.{1,139}。/m).reverse
 
 include Clockwork
