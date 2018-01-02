@@ -40,19 +40,29 @@ north = weather_info.call(200010)
 central = weather_info.call(200020)
 south = weather_info.call(200030)
 region = north['pinpointLocations']|central['pinpointLocations']|south['pinpointLocations']
-location = /松本/
-location_match = region.select{|area| area['name'] =~ location}
-# location_match[0].each_value{|val| pp val}
+
+# place = "動物園の街＃須坂市にははカピバラさんがいます。"
+# place.match(%r|\s?[#＃]\s?(.+)\z|)
+# ps = $1
+# location_match = region.select{|area| ps =~ Regexp.compile(area['name'])}
+# place = location_match[0].fetch("name")
+# link = location_match[0].fetch("link")
+# pp place
+# pp link
 
 client_streaming.user do |status|
   case status
   when Twitter::DirectMessage
-    status.full_text.scan(%r|\s?[#＃]\s?(.{1,3})\s?|)
+    str = status.full_text.match(%r|\s?[#＃]\s?(.+)\z|)
+    location = $1
     name = status.sender.screen_name
-    if(region.select{|area| area['name'] =~ /$1/})
-      place = location_match[0]["name"]
-      link = location_match[0]["link"]
+    location_match = region.select{|area| location =~ Regexp.compile(area['name'])}
+    place = location_match[0].fetch("name")
+    link = location_match[0].fetch("link")
+    if(location_match) # && (status.sender.id != 932259721318297600)
       client_rest.create_direct_message(status.sender.id, "#{name}さん、#{place}の天気へのリンクは#{link}です。")
+    elsif(!location_match)
+      client_rest.create_direct_message(status.sender.id, "位置情報を取得できませんでした。")
     elsif(status.full_text =~ /ping/)
       client_rest.create_direct_message(status.sender.id, "PONG")
     end
