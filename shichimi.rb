@@ -24,7 +24,7 @@ client_streaming = Twitter::Streaming::Client.new(
 
 module Inquiry
   def call(i)
-    path = "#{self}#{i}"
+    path = "http://weather.livedoor.com/forecast/webservice/json/v1?city=#{i}"
     uri = URI.parse(path)
     json = Net::HTTP.get(uri)
     JSON.parse(json)
@@ -34,14 +34,11 @@ end
 # Weather report API provided by Weather Hacks
 # http://weather.livedoor.com/weather_hacks/webservice
 
-weather_info = "http://weather.livedoor.com/forecast/webservice/json/v1?city="
 include Inquiry
-north = weather_info.call(200010)
-central = weather_info.call(200020)
-south = weather_info.call(200030)
+north = call(200010)
+central = call(200020)
+south = call(200030)
 region = north['pinpointLocations']|central['pinpointLocations']|south['pinpointLocations']
-
-myinfo = client_rest.user(client_rest.verify_credentials.id)
 
 client_streaming.user do |status|
   case status
