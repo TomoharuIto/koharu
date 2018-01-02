@@ -41,14 +41,7 @@ central = weather_info.call(200020)
 south = weather_info.call(200030)
 region = north['pinpointLocations']|central['pinpointLocations']|south['pinpointLocations']
 
-# place = "動物園の街＃須坂市にははカピバラさんがいます。"
-# place.match(%r|\s?[#＃]\s?(.+)\z|)
-# ps = $1
-# location_match = region.select{|area| ps =~ Regexp.compile(area['name'])}
-# place = location_match[0].fetch("name")
-# link = location_match[0].fetch("link")
-# pp place
-# pp link
+myinfo = client_rest.user(client_rest.verify_credentials.id)
 
 client_streaming.user do |status|
   case status
@@ -56,10 +49,10 @@ client_streaming.user do |status|
     str = status.full_text.match(%r|\s?[#＃]\s?(.+)\z|)
     location = $1
     name = status.sender.screen_name
-    location_match = region.select{|area| location =~ Regexp.compile(area['name'])}
-    place = location_match[0].fetch("name")
-    link = location_match[0].fetch("link")
-    if(location_match) # && (status.sender.id != 932259721318297600)
+    location_match = region.select{|area| Regexp.compile(area['name']) =~ location}
+    if(location_match)
+      place = location_match[0].fetch("name")
+      link = location_match[0].fetch("link")
       client_rest.create_direct_message(status.sender.id, "#{name}さん、#{place}の天気へのリンクは#{link}です。")
     elsif(!location_match)
       client_rest.create_direct_message(status.sender.id, "位置情報を取得できませんでした。")
