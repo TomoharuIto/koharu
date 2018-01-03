@@ -39,36 +39,42 @@ north = call(200010)
 central = call(200020)
 south = call(200030)
 region = north['pinpointLocations']|central['pinpointLocations']|south['pinpointLocations']
+shichimi = client_rest.user(client_rest.verify_credentials.id)
+shichimi_id = shichimi.id
 
 client_streaming.user do |status|
   case status
   when Twitter::DirectMessage
+
     str = status.full_text.match(%r|\s?[#＃]\s?(.+)\z|)
     location = $1
+    id = (status.sender.id != shichimi_id)
     name = status.sender.screen_name
     location_match = region.select{|area| Regexp.compile(area['name']) =~ location}
-    if(location_match)
+
+    if(location_match != [] && id)
       place = location_match[0].fetch("name")
       link = location_match[0].fetch("link")
-      client_rest.create_direct_message(status.sender.id, "#{name}さん、#{place}の天気へのリンクは#{link}です。")
-    elsif(!location_match)
+      client_rest.create_direct_message(status.sender.id, "#{name}さん、#{place}の天気へのリンクはこちらです。\n#{link}")
+    elsif(location_match == [] && id)
       client_rest.create_direct_message(status.sender.id, "位置情報を取得できませんでした。")
-    elsif(status.full_text =~ /ping/)
+    elsif(status.full_text =~ /ping/ && id)
       client_rest.create_direct_message(status.sender.id, "PONG")
     end
+
   end
 end
 
-# public_time = central['description']['publicTime']
-# date_time = DateTime.parse(public_time)
-# suffix = %w(お を の もふ よ ぽ と)
-# announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報です#{suffix.sample}。\n\n")
-# weather = central['description']['text']
-# weather_forecast = (announcement_time << weather).scan(/.{1,139}。/m).reverse
-#
-# include Clockwork
-# every(1.day, 'shichimi', :at => '06:00') do
-#   weather_forecast.each do |par|
-#     client_rest.update(par)
-#   end
-# end
+public_time = central['description']['publicTime']
+date_time = DateTime.parse(public_time)
+suffix = %w(お を の もふ よ ぽ と)
+announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報です#{suffix.sample}。\n\n")
+weather = central['description']['text']
+weather_forecast = (announcement_time << weather).scan(/.{1,139}。/m).reverse
+
+include Clockwork
+every(1.day, 'shichimi', :at => '06:00') do
+  weather_forecast.each do |par|
+    client_rest.update(par)
+  end
+end
