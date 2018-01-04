@@ -39,29 +39,28 @@ north = call(200010)
 central = call(200020)
 south = call(200030)
 region = north['pinpointLocations']|central['pinpointLocations']|south['pinpointLocations']
-shichimi = client_rest.user(client_rest.verify_credentials.id)
-shichimi_id = shichimi.id
+own = client_rest.user(client_rest.verify_credentials.id)
+own_id = own.id
 
 client_streaming.user do |status|
+
   case status
   when Twitter::DirectMessage
-
     str = status.full_text.match(%r|\s?[#＃]\s?(.+)\z|)
     location = $1
-    id = (status.sender.id != shichimi_id)
+    others = (status.sender.id != own_id)
     name = status.sender.screen_name
     location_match = region.select{|area| Regexp.compile(area['name']) =~ location}
 
-    if(location_match != [] && id)
+    if(!location_match.empty? && others)
       place = location_match[0].fetch("name")
       link = location_match[0].fetch("link")
       client_rest.create_direct_message(status.sender.id, "#{name}さん、#{place}の天気へのリンクはこちらです。\n#{link}")
-    elsif(location_match == [] && id)
-      client_rest.create_direct_message(status.sender.id, "位置情報を取得できませんでした。")
-    elsif(status.full_text =~ /ping/ && id)
+    elsif(status.full_text =~ /ping/ && others)
       client_rest.create_direct_message(status.sender.id, "PONG")
+    elsif(location_match.empty? && others)
+      client_rest.create_direct_message(status.sender.id, "位置情報を取得できませんでした。")
     end
-
   end
 end
 
