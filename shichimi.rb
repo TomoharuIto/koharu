@@ -1,11 +1,12 @@
-require 'twitter'
-require 'net/http'
-require 'uri'
-require 'json'
-require 'date'
 require 'clockwork'
-require 'pp'
+require 'date'
+require 'docomoru'
 require 'dotenv'
+require 'json'
+require 'net/http'
+require 'pp'
+require 'twitter'
+require 'uri'
 
 Dotenv.load
 client_rest = Twitter::REST::Client.new(
@@ -22,7 +23,9 @@ client_streaming = Twitter::Streaming::Client.new(
   access_token_secret: ENV['ACCESS_TOKEN_SECRET']
 )
 
-# :thanks => "Weather Hacks"
+client_docomo = Docomoru::Client.new(api_key: ENV['DOCOMO_API_KEY'])
+
+# Thanks!
 # Weather report API provided by Weather Hacks
 # http://weather.livedoor.com/weather_hacks/webservice
 
@@ -62,7 +65,9 @@ client_streaming.user do |status|
       if(status.full_text =~ /ping/)
         client_rest.create_direct_message(status.sender.id, "PONG")
       else
-        client_rest.create_direct_message(status.sender.id, "それは面白い冗談ですね。")
+        talk = client_docomo.create_dialogue(status.full_text)
+        response = talk.body['utt']
+        client_rest.create_direct_message(status.sender.id, "#{response}")
       end
     end
   end
