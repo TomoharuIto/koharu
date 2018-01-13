@@ -1,5 +1,5 @@
 source :rubygems
-ruby '2.4.0'
+ruby '2.4.2'
 gem 'twitter'
 gem 'json'
 gem 'date'
