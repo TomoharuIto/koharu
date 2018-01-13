@@ -53,24 +53,16 @@ own = client_rest.user(client_rest.verify_credentials.id)
 own_id = own.id
 
 client_streaming.user do |status|
-
-  dest = status.sender.id
-
-  if status.is_a?(Twitter::DirectMessage) && (dest != own_id)
-
+  if status.is_a?(Twitter::DirectMessage) && (status.sender.id != own_id)
     hashtag = status.full_text.match(%r|\s?[#＃]\s?(.{1,5})\s?|)
-
+    dest = status.sender.id
     if(!hashtag.nil?)
-
       location = $1
       location_match = region.select{|area| Regexp.compile(area['name']) =~ location}
-
       if(!location_match.empty?)
-
         name = status.sender.screen_name
         place = location_match[0].fetch("name")
         link = location_match[0].fetch("link")
-
         client_rest.create_direct_message(dest, "#{name}さん、#{place}の天気へのリンクはこちらです。\n#{link}")
       elsif(location_match.empty?)
         client_rest.create_direct_message(dest, "位置情報を取得できませんでした。")
@@ -79,10 +71,8 @@ client_streaming.user do |status|
       if(status.full_text =~ /ping/)
         client_rest.create_direct_message(dest, "PONG")
       else
-
         talk = client_docomo.create_dialogue(status.full_text)
         response = talk.body['utt']
-
         client_rest.create_direct_message(dest, "#{response}")
       end
     end
