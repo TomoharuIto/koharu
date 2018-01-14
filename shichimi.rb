@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'clockwork'
 require 'date'
 require 'docomoru'
