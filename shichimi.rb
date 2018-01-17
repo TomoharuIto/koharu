@@ -4,12 +4,12 @@ require 'docomoru'
 require 'dotenv'
 require 'json'
 require 'net/http'
-require 'pp'
 require 'twitter'
 require 'uri'
+# require 'pp'
 
 # Thanks!
-# Weather report API provided by Weather Hacks
+# Weather forecast API provided by Weather Hacks
 # http://weather.livedoor.com/weather_hacks/webservice
 # Dialogue API provided by docomo Developer support
 # https://dev.smt.docomo.ne.jp/?p=index
