@@ -1,5 +1,3 @@
-require 'clockwork'
-require 'date'
 require 'docomoru'
 require 'dotenv'
 require 'json'

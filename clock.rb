@@ -1,5 +1,37 @@
-require File.expand_path('../dialogue', __FILE__)
+require 'clockwork'
+require 'date'
+require 'json'
+require 'net/http'
+require 'twitter'
+require 'uri'
+# require 'pp'
 
+Dotenv.load
+client_rest = Twitter::REST::Client.new(
+  consumer_key: ENV['CONSUMER_KEY'],
+  consumer_secret: ENV['CONSUMER_SECRET'],
+  access_token: ENV['ACCESS_TOKEN'],
+  access_token_secret: ENV['ACCESS_TOKEN_SECRET']
+)
+
+# Thanks!
+# Weather forecast API provided by Weather Hacks
+# http://weather.livedoor.com/weather_hacks/webservice
+
+module Inquiry
+  def call(i)
+    path = "http://weather.livedoor.com/forecast/webservice/json/v1?city=#{i}"
+    uri = URI.parse(path)
+    json = Net::HTTP.get(uri)
+    JSON.parse(json)
+  end
+end
+
+include Inquiry
+north = call(200010)
+central = call(200020)
+south = call(200030)
+region = north['pinpointLocations']|central['pinpointLocations']|south['pinpointLocations']
 public_time = central['description']['publicTime']
 date_time = DateTime.parse(public_time)
 suffix = %w(お を の もふ よ ぽ と)
