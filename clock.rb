@@ -1,4 +1,4 @@
-require File.expand_path('../bot', __FILE__)
+require File.expand_path('../dialogue', __FILE__)
 
 public_time = central['description']['publicTime']
 date_time = DateTime.parse(public_time)
