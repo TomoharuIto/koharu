@@ -1,3 +1,3 @@
-weather-forecast: bundle exec clockwork shichimi.rb
-worker: bundle exec ruby shichimi.rb
+clock: bundle exec clockwork clock.rb
+worker: bundle exec ruby bot.rb
 
