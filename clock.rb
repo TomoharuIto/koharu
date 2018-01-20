@@ -1,5 +1,6 @@
 require 'clockwork'
 require 'date'
+require 'dotenv'
 require 'json'
 require 'net/http'
 require 'twitter'
