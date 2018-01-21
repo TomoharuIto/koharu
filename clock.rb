@@ -29,19 +29,16 @@ module Inquiry
 end
 
 include Inquiry
-north = call(200010)
-central = call(200020)
-south = call(200030)
-region = north['pinpointLocations']|central['pinpointLocations']|south['pinpointLocations']
-public_time = central['description']['publicTime']
+area = call(200010)
+public_time = area['description']['publicTime']
 date_time = DateTime.parse(public_time)
 suffix = %w(お を の もふ よ ぽ と)
 announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報です#{suffix.sample}。\n\n")
-weather = central['description']['text']
+weather = area['description']['text']
 weather_forecast = (announcement_time << weather).scan(/.{1,139}。/m).reverse
 
 include Clockwork
-every(1.day, 'shichimi', :at => '06:00') do
+every(1.day, 'koharu', :at => '06:00') do
   weather_forecast.each do |par|
     client_rest.update(par)
   end
