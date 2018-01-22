@@ -79,7 +79,7 @@ weather = central['description']['text']
 weather_forecast = (announcement_time << weather).scan(/.{1,139}。/m).reverse
 
 include Clockwork
-every(1.day, 'shichimi', :at => '11:00') do
+every(1.day, 'shichimi', :at => '11:05') do
   weather_forecast.each do |par|
     client_rest.update(par)
   end
