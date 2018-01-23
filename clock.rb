@@ -43,6 +43,11 @@ module Weather
     announcement_time = time.strftime("%m月%d日")
     telop = weather[i]['telop']
     image = weather[i]['image']['url']
+    image.match(/\/(\d+)\./)
+    image.gsub(/\d+/, "9" => "Hello", "11" => "World")
+    image.delete("^0-9")
+    num = $1
+    pp $1
     temperature_max = weather[i]['temperature']['max']
     unless temperature_max == nil
       temperature_max = temperature_max['celsius']
