@@ -45,7 +45,6 @@ module Weather
 #     num = image.match(/\/(\d+)\./).to_s
     num = image.delete("^0-9")
     emoji = num.gsub(num, "9" => "Hello", "11" => "\u{2603}\/\u{2601}")
-    pp emoji
     temperature_max = weather[i]['temperature']['max']
     unless temperature_max == nil
       temperature_max = temperature_max['celsius']
@@ -80,10 +79,10 @@ announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報で
 weather = central['description']['text']
 weather_forecast = (announcement_time << weather).scan(/.{1,139}。/m).reverse
 
-# include Clockwork
-# every(1.day, 'shichimi', :at => '11:05') do
-#   weather_forecast.each do |par|
-#     client_rest.update(par)
-#   end
-# end
+include Clockwork
+every(1.day, 'shichimi', :at => '11:05') do
+  weather_forecast.each do |par|
+    client_rest.update(par)
+  end
+end
 
