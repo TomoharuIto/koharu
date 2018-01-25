@@ -74,7 +74,7 @@ north_weather = "北部\n" + forecast(north, 0)<<forecast(north, 1)<<forecast(no
 central_weather ="中部\n" +  forecast(central, 0)<<forecast(central, 1)<<forecast(central, 2)
 south_weather = "南部\n" + forecast(south, 0)<<forecast(south, 1)<<forecast(south, 2)
 region_weather = ["#{north_weather}", "#{central_weather}", "#{south_weather}"].reverse
-pp region_weather
+# pp region_weather
 # region_weather.each do |par|
 #   client_rest.update(par)
 # end
