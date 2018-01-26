@@ -80,7 +80,7 @@ public_time = central['description']['publicTime']
 date_time = DateTime.parse(public_time)
 suffix = %w(お を の もふ よ ぽ と)
 announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報です#{suffix.sample}。\n\n")
-weather = central['description']['text']
+weather = central['description']['text'].gsub(/\s|。/,"/s" => "", "。" => "。\n\n")
 weather_forecast = (announcement_time << weather).scan(/.{1,139}。/m).reverse
 
 include Clockwork
