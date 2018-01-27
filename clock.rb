@@ -54,7 +54,6 @@ module Weather
     "22" => "\u{2614 FE0F}", "23" => "\u{26C4 FE0F}", "24" => "\u{26C4 FE0F}\/\u{2600 FE0F}", "25" => "\u{26C4 FE0F}\/\u{2601 FE0F}",
     "26" => "\u{26C4 FE0F}\/\u{2602 FE0F}", "27" => "\u{26C4 FE0F}→\u{2600 FE0F}", "28" => "\u{26C4 FE0F}→\u{2601 FE0F}",
     "29" => "\u{26C4 FE0F}→\u{2602 FE0F}", "30" => "\u{2603 FE0F}")
-    pp emoji
     temperature_max = weather[i]['temperature']['max']
     unless temperature_max == nil
       temperature_max = temperature_max['celsius']
