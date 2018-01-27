@@ -67,29 +67,43 @@ module Weather
       temperature_min = "--"
     end
     weather_forecast = "#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\n\n"
-      end
-    end
+  end
+end
+
 include Weather
-north_weather = "北部\n" + forecast(north, 0)<<forecast(north, 1)
-central_weather ="中部\n" +  forecast(central, 0)<<forecast(central, 1)
-south_weather = "南部\n" + forecast(south, 0)<<forecast(south, 1)
-region_weather = ["#{north_weather}", "#{central_weather}", "#{south_weather}"].reverse
-region = north['pinpointLocations']|central['pinpointLocations']|south['pinpointLocations']
+today_north_weather = "長野(北部)\n" + forecast(north, 0)
+today_central_weather ="松本(中部)\n" +  forecast(central, 0)
+today_south_weather = "飯田(南部)\n" + forecast(south, 0)
+today_region_weather = ["#{today_north_weather}", "#{today_central_weather}", "#{today_south_weather}"].reverse
+
+tomorrow_north_weather = "長野(北部)\n" + forecast(north, 1)
+tomorrow_central_weather ="松本(中部)\n" +  forecast(central, 1)
+tomorrow_south_weather = "飯田(南部)\n" + forecast(south, 1)
+tomorrow_region_weather = ["#{tomorrow_north_weather}", "#{tomorrow_central_weather}", "#{tomorrow_south_weather}"].reverse
+
 public_time = central['description']['publicTime']
 date_time = DateTime.parse(public_time)
 suffix = %w(お を の もふ よ ぽ と)
+prefix = %w()
 announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報です#{suffix.sample}。\n\n")
 weather = central['description']['text'].gsub(/\s|。/,"/s" => "", "。" => "。\n\n")
 weather_forecast = (announcement_time << weather).scan(/.{1,139}\n/m).reverse
-# include Clockwork
-# every(1.day, 'noon', :at => '12:00') do
-#   weather_forecast.each do |par|
-#     client_rest.update(par)
-#   end
-# end
-#
-# every(1.day, 'evening', :at => '18:00') do
-#   region_weather.each do  |par|
-#     client_rest.update(par)
-#   end
-#  end
+
+include Clockwork
+every(1.day, 'morning', :at => '6:00') do
+  today_region_weather.each do  |par|
+    client_rest.update(par)
+  end
+ end
+
+every(1.day, 'noon', :at => '12:00') do
+  weather_forecast.each do |par|
+    client_rest.update(par)
+  end
+end
+
+every(1.day, 'evening', :at => '18:00') do
+  tomorrow_region_weather.each do  |par|
+    client_rest.update(par)
+  end
+ end
