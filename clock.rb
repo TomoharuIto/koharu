@@ -6,6 +6,7 @@ require 'net/http'
 require 'twitter'
 require 'uri'
 require 'pp'
+require File.expand_path('../data', __FILE__)
 
 Dotenv.load
 client_rest = Twitter::REST::Client.new(
@@ -96,42 +97,35 @@ weather = central['description']['text'].gsub(/\s|。/,"\s" => "", "。" => "。
 weather_forecast = (announcement_time << weather).scan(/.{1,139}\n/m).reverse
 # weather_forecast = (announcement_time << weather).scan(/^\d+.+\n?/m).reverse
 
-weather_forecast.each do |par|
-  begin
-    client_rest.update(par)
-  rescue
-    client_rest.update("#{excuse.sample}")
-  end
-end
 
 include Clockwork
 
-every(1.day, 'morning', :at => '06:00') do
-  today_region_weather.each do  |par|
-    begin
-      client_rest.update(par)
-    rescue
-      client_rest.update("#{excuse.sample}")
-    end
-  end
- end
-
-every(1.day, 'noon', :at => '12:00') do
-  weather_forecast.each do |par|
-    begin
-      client_rest.update(par)
-    rescue
-      client_rest.update("#{excuse.sample}")
-    end
-  end
-end
-
-every(1.day, 'evening', :at => '18:00') do
-  tomorrow_region_weather.each do  |par|
-    begin
-      client_rest.update(par)
-    rescue
-      client_rest.update("#{excuse.sample}")
-    end
-  end
- end
+# every(1.day, 'morning', :at => '06:00') do
+#   today_region_weather.each do  |par|
+#     begin
+#       client_rest.update(par)
+#     rescue
+#       client_rest.update("#{excuse.sample}")
+#     end
+#   end
+#  end
+#
+# every(1.day, 'noon', :at => '12:00') do
+#   weather_forecast.each do |par|
+#     begin
+#       client_rest.update(par)
+#     rescue
+#       client_rest.update("#{excuse.sample}")
+#     end
+#   end
+# end
+#
+# every(1.day, 'evening', :at => '18:00') do
+#   tomorrow_region_weather.each do  |par|
+#     begin
+#       client_rest.update(par)
+#     rescue
+#       client_rest.update("#{excuse.sample}")
+#     end
+#   end
+#  end
