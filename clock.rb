@@ -90,26 +90,48 @@ tomorrow_region_weather = ["#{tomorrow_north_weather}", "#{tomorrow_central_weat
 public_time = central['description']['publicTime']
 date_time = DateTime.parse(public_time)
 suffix = %w(お を の もふ よ ぽ と)
-prefix = %w()
-announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報です#{suffix.sample}。\n\n")
-weather = central['description']['text'].gsub(/\s|。/,"/s" => "", "。" => "。\n\n")
+excuse = %w(ごめ～ん、文字数オーバーしちゃった。 長すぎで弾かれました。 ごめんなさい、文字数オーバーのようです。)
+announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報です#{suffix.sample}。\n")
+weather = central['description']['text'].gsub(/\s|。/,"\s" => "", "。" => "。\n")
 weather_forecast = (announcement_time << weather).scan(/.{1,139}\n/m).reverse
+# weather_forecast = (announcement_time << weather).scan(/^\d+.+\n?/m).reverse
 
-# include Clockwork
-# every(1.day, 'morning', :at => '06:00') do
-#   today_region_weather.each do  |par|
-#     client_rest.update(par)
-#   end
-#  end
-#
-# every(1.day, 'noon', :at => '12:00') do
-#   weather_forecast.each do |par|
-#     client_rest.update(par)
-#   end
-# end
-#
-# every(1.day, 'evening', :at => '18:00') do
-#   tomorrow_region_weather.each do  |par|
-#     client_rest.update(par)
-#   end
-#  end
+weather_forecast.each do |par|
+  begin
+    client_rest.update(par)
+  rescue
+    client_rest.update("#{excuse.sample}")
+  end
+end
+
+include Clockwork
+
+every(1.day, 'morning', :at => '06:00') do
+  today_region_weather.each do  |par|
+    begin
+      client_rest.update(par)
+    rescue
+      client_rest.update("#{excuse.sample}")
+    end
+  end
+ end
+
+every(1.day, 'noon', :at => '12:00') do
+  weather_forecast.each do |par|
+    begin
+      client_rest.update(par)
+    rescue
+      client_rest.update("#{excuse.sample}")
+    end
+  end
+end
+
+every(1.day, 'evening', :at => '18:00') do
+  tomorrow_region_weather.each do  |par|
+    begin
+      client_rest.update(par)
+    rescue
+      client_rest.update("#{excuse.sample}")
+    end
+  end
+ end
