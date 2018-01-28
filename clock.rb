@@ -6,7 +6,6 @@ require 'net/http'
 require 'twitter'
 require 'uri'
 require 'pp'
-require File.expand_path('../data', __FILE__)
 
 Dotenv.load
 client_rest = Twitter::REST::Client.new(
@@ -71,6 +70,7 @@ module Weather
       temperature_min = "--"
     end
     weather_forecast = "地域: #{city}\n#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\nlink: #{link}\n"
+    pp weather_forecast
   rescue
     weather_forecast ||= ""
   end
