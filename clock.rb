@@ -57,20 +57,14 @@ module Weather
     "22" => "\u{2614 FE0F}", "23" => "\u{26C4 FE0F}", "24" => "\u{26C4 FE0F}\/\u{2600 FE0F}", "25" => "\u{26C4 FE0F}\/\u{2601 FE0F}",
     "26" => "\u{26C4 FE0F}\/\u{2602 FE0F}", "27" => "\u{26C4 FE0F}→\u{2600 FE0F}", "28" => "\u{26C4 FE0F}→\u{2601 FE0F}",
     "29" => "\u{26C4 FE0F}→\u{2602 FE0F}", "30" => "\u{2603 FE0F}")
-    temperature_max = weather[i]['temperature']['max']
-    unless temperature_max == nil
-      temperature_max = temperature_max['celsius']
-    else
-      temperature_max = "--"
-    end
-    temperature_min = weather[i]['temperature']['min']
-    unless temperature_min == nil
-      temperature_min = temperature_min['celsius']
-    else
-      temperature_min = "--"
+    begin
+      temperature_max = weather[i]['temperature']['max']['celsius']
+      temperature_min = weather[i]['temperature']['min']['celsius']
+    rescue
+      temperature_max ||= "--"
+      temperature_min ||= "--"
     end
     weather_forecast = "地域: #{city}\n#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\nlink: #{link}\n"
-    pp weather_forecast
   rescue
     weather_forecast ||= ""
   end
@@ -100,32 +94,32 @@ weather_forecast = (announcement_time << weather).scan(/.{1,139}\n/m).reverse
 
 include Clockwork
 
-# every(1.day, 'morning', :at => '06:00') do
-#   today_region_weather.each do  |par|
-#     begin
-#       client_rest.update(par)
-#     rescue
-#       client_rest.update("#{excuse.sample}")
-#     end
-#   end
-#  end
-#
-# every(1.day, 'noon', :at => '12:00') do
-#   weather_forecast.each do |par|
-#     begin
-#       client_rest.update(par)
-#     rescue
-#       client_rest.update("#{excuse.sample}")
-#     end
-#   end
-# end
-#
-# every(1.day, 'evening', :at => '18:00') do
-#   tomorrow_region_weather.each do  |par|
-#     begin
-#       client_rest.update(par)
-#     rescue
-#       client_rest.update("#{excuse.sample}")
-#     end
-#   end
-#  end
+every(1.day, 'morning', :at => '06:00') do
+  today_region_weather.each do  |par|
+    begin
+      client_rest.update(par)
+    rescue
+      client_rest.update("#{excuse.sample}")
+    end
+  end
+ end
+
+every(1.day, 'noon', :at => '12:00') do
+  weather_forecast.each do |par|
+    begin
+      client_rest.update(par)
+    rescue
+      client_rest.update("#{excuse.sample}")
+    end
+  end
+end
+
+every(1.day, 'evening', :at => '18:00') do
+  tomorrow_region_weather.each do  |par|
+    begin
+      client_rest.update(par)
+    rescue
+      client_rest.update("#{excuse.sample}")
+    end
+  end
+ end
