@@ -36,7 +36,10 @@ south = call(200030)
 module Weather
   def forecast(area, i)
     include Inquiry
+    unless area['forecasts'][i] == nil
     weather = area['forecasts']
+    city = area['location']['city']
+    link = area['link']
     date = weather[i]['dateLabel']
     date_time = weather[i]['date']
     time = DateTime.parse(date_time)
@@ -66,20 +69,24 @@ module Weather
     else
       temperature_min = "--"
     end
-    weather_forecast = "#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\n\n"
+    weather_forecast = "地域: #{city}\n#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\nlink: #{link}\n"
+  end
+  else
+    weather_forecast ||= ""
   end
 end
 
 include Weather
-today_north_weather = "長野(北部)\n" + forecast(north, 0)
-today_central_weather ="松本(中部)\n" +  forecast(central, 0)
-today_south_weather = "飯田(南部)\n" + forecast(south, 0)
+today_north_weather = forecast(north, 0)
+today_central_weather = forecast(central, 0)
+today_south_weather = forecast(south, 0)
 today_region_weather = ["#{today_north_weather}", "#{today_central_weather}", "#{today_south_weather}"].reverse
 
-tomorrow_north_weather = "長野(北部)\n" + forecast(north, 1)
-tomorrow_central_weather ="松本(中部)\n" +  forecast(central, 1)
-tomorrow_south_weather = "飯田(南部)\n" + forecast(south, 1)
+tomorrow_north_weather = forecast(north, 1) << forecast(north, 2) << forecast(north, 3)
+tomorrow_central_weather = forecast(central, 1) << forecast(central, 2) << forecast(central, 3)
+tomorrow_south_weather = forecast(south, 1) << forecast(south, 2) << forecast(south, 3)
 tomorrow_region_weather = ["#{tomorrow_north_weather}", "#{tomorrow_central_weather}", "#{tomorrow_south_weather}"].reverse
+# pp tomorrow_region_weather
 
 public_time = central['description']['publicTime']
 date_time = DateTime.parse(public_time)
@@ -89,21 +96,21 @@ announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報で
 weather = central['description']['text'].gsub(/\s|。/,"/s" => "", "。" => "。\n\n")
 weather_forecast = (announcement_time << weather).scan(/.{1,139}\n/m).reverse
 
-include Clockwork
-every(1.day, 'morning', :at => '6:00') do
-  today_region_weather.each do  |par|
-    client_rest.update(par)
-  end
- end
-
-every(1.day, 'noon', :at => '12:00') do
-  weather_forecast.each do |par|
-    client_rest.update(par)
-  end
-end
-
-every(1.day, 'evening', :at => '18:00') do
-  tomorrow_region_weather.each do  |par|
-    client_rest.update(par)
-  end
- end
+# include Clockwork
+# every(1.day, 'morning', :at => '06:00') do
+#   today_region_weather.each do  |par|
+#     client_rest.update(par)
+#   end
+#  end
+#
+# every(1.day, 'noon', :at => '12:00') do
+#   weather_forecast.each do |par|
+#     client_rest.update(par)
+#   end
+# end
+#
+# every(1.day, 'evening', :at => '18:00') do
+#   tomorrow_region_weather.each do  |par|
+#     client_rest.update(par)
+#   end
+#  end
