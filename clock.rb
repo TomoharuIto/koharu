@@ -38,8 +38,8 @@ module Weather
   def forecast(area, i)
     include Inquiry
     weather = area['forecasts']
-    city = area['location']['city']
-    link = area['link']
+    # city = area['location']['city']
+    # link = area['link']
     date = weather[i]['dateLabel']
     date_time = weather[i]['date']
     time = DateTime.parse(date_time)
@@ -64,7 +64,7 @@ module Weather
       temperature_max ||= "--"
       temperature_min ||= "--"
     end
-    weather_forecast = "地域: #{city}\n#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\nlink: #{link}\n"
+    weather_forecast = "#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\n\n"
   rescue
     weather_forecast ||= ""
   end
@@ -72,14 +72,25 @@ module Weather
 end
 
 include Weather
-today_north_weather = forecast(north, 0)
-today_central_weather = forecast(central, 0)
-today_south_weather = forecast(south, 0)
+
+north_link = north['link']
+central_link = central['link']
+south_link = south['link']
+
+north_city = north['location']['city']
+central_city = central['location']['city']
+south_city = south['location']['city']
+
+
+today_north_weather = "北部: #{north_city}\n" << forecast(north, 0) << "Link: #{north_link}"
+pp today_north_weather
+today_central_weather = "中部: #{central_city}\n" << forecast(central, 0) << "Link: #{central_link}"
+today_south_weather = "南部: #{south_city}\n" << forecast(south, 0) << "Link: #{south_link}"
 today_region_weather = ["#{today_north_weather}", "#{today_central_weather}", "#{today_south_weather}"].reverse
 
-tomorrow_north_weather = forecast(north, 1) << forecast(north, 2)
-tomorrow_central_weather = forecast(central, 1) << forecast(central, 2)
-tomorrow_south_weather = forecast(south, 1) << forecast(south, 2)
+tomorrow_north_weather = "北部: #{north_city}\n" << forecast(north, 1) << forecast(north, 2) << "Link: #{north_link}"
+tomorrow_central_weather = "中部: #{central_city}\n << "forecast(central, 1) << forecast(central, 2) << "Link: #{central_link}"
+tomorrow_south_weather = "南部: #{south_city}\n << "forecast(south, 1) << forecast(south, 2) << "Link: #{south_link}"
 tomorrow_region_weather = ["#{tomorrow_north_weather}", "#{tomorrow_central_weather}", "#{tomorrow_south_weather}"].reverse
 
 public_time = central['description']['publicTime']
