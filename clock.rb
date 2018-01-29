@@ -38,8 +38,6 @@ module Weather
   def forecast(area, i)
     include Inquiry
     weather = area['forecasts']
-    # city = area['location']['city']
-    # link = area['link']
     date = weather[i]['dateLabel']
     date_time = weather[i]['date']
     time = DateTime.parse(date_time)
@@ -64,7 +62,7 @@ module Weather
       temperature_max ||= "--"
       temperature_min ||= "--"
     end
-    weather_forecast = "#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\n\n"
+    weather_forecast = "#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\n"
   rescue
     weather_forecast ||= ""
   end
@@ -83,14 +81,13 @@ south_city = south['location']['city']
 
 
 today_north_weather = "北部: #{north_city}\n" << forecast(north, 0) << "Link: #{north_link}"
-pp today_north_weather
 today_central_weather = "中部: #{central_city}\n" << forecast(central, 0) << "Link: #{central_link}"
 today_south_weather = "南部: #{south_city}\n" << forecast(south, 0) << "Link: #{south_link}"
 today_region_weather = ["#{today_north_weather}", "#{today_central_weather}", "#{today_south_weather}"].reverse
 
 tomorrow_north_weather = "北部: #{north_city}\n" << forecast(north, 1) << forecast(north, 2) << "Link: #{north_link}"
-tomorrow_central_weather = "中部: #{central_city}\n << "forecast(central, 1) << forecast(central, 2) << "Link: #{central_link}"
-tomorrow_south_weather = "南部: #{south_city}\n << "forecast(south, 1) << forecast(south, 2) << "Link: #{south_link}"
+tomorrow_central_weather = "中部: #{central_city}\n" << forecast(central, 1) << forecast(central, 2) << "Link: #{central_link}"
+tomorrow_south_weather = "南部: #{south_city}\n" << forecast(south, 1) << forecast(south, 2) << "Link: #{south_link}"
 tomorrow_region_weather = ["#{tomorrow_north_weather}", "#{tomorrow_central_weather}", "#{tomorrow_south_weather}"].reverse
 
 public_time = central['description']['publicTime']
