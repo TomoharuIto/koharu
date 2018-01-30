@@ -90,19 +90,15 @@ tomorrow_central_weather = "中部: #{central_city}\n\n" << forecast(central, 1)
 tomorrow_south_weather = "南部: #{south_city}\n\n" << forecast(south, 1) << forecast(south, 2) << "Link: #{south_link}"
 tomorrow_region_weather = ["#{tomorrow_north_weather}", "#{tomorrow_central_weather}", "#{tomorrow_south_weather}"].reverse
 
-# public_time = central['description']['publicTime']
-# date_time = DateTime.parse(public_time)
 date = Date.today
 weeks = %w(日 月 火 水 木 金 土)
 today = "#{date.month}月#{date.day}日#{weeks[date.wday]}曜日,お昼の天気予報をお伝えします。\n"
 suffix = %w(お を の もふ よ ぽ と)
 excuse = %w(ごめ～ん、文字数オーバーしちゃった。 わ～、文字数超過しちゃいました。 ごめんなさい、文字数オーバーのようです。)
 weather = central['description']['text'].gsub(/\s|。/,"\s" => "", "。" => "。\n")
-# announcement_time = date_time.strftime("%m月%d日 %H時%M分 発表の予報です#{suffix.sample}。\n")
-# weather_forecast = (announcement_time << weather).scan(/.{1,139}\n/m).reverse
 weather_forecast = (today << weather).scan(/^\d+.+?\D+$/m).reverse
-include Clockwork
 
+include Clockwork
 every(1.day, 'morning', :at => '09:00') do
   today_region_weather.each do  |par|
     begin
@@ -113,7 +109,7 @@ every(1.day, 'morning', :at => '09:00') do
   end
  end
 
-every(1.day, 'noon', :at => '12:00') do
+every(1.day, 'noon', :at => '12:30') do
   weather_forecast.each do |par|
     begin
       client_rest.update(par)
