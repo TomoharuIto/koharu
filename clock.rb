@@ -56,17 +56,20 @@ module Weather
     "26" => "\u{26C4 FE0F}\/\u{2602 FE0F}", "27" => "\u{26C4 FE0F}→\u{2600 FE0F}", "28" => "\u{26C4 FE0F}→\u{2601 FE0F}",
     "29" => "\u{26C4 FE0F}→\u{2602 FE0F}", "30" => "\u{2603 FE0F}")
 
-face = ["\u{1F600 FE0F}", "\u{1F601 FE0F}", "\u{1F602 FE0F}", "\u{1F603 FE0F}", "\u{1F604 FE0F}", "\u{1F605 FE0F}", "\u{1F606 FE0F}", "\u{1F607 FE0F}", "\u{1F608 FE0F}", "\u{1F609 FE0F}",
-"\u{1F60A FE0F}", "\u{1F60B FE0F}", "\u{1F60C FE0F}", "\u{1F60D FE0F}", "\u{1F60E FE0F}", "\u{1F60F FE0F}"]
+face = [
+        "\u{1F600 FE0F}", "\u{1F601 FE0F}", "\u{1F602 FE0F}", "\u{1F603 FE0F}", "\u{1F604 FE0F}", "\u{1F605 FE0F}", "\u{1F606 FE0F}", "\u{1F607 FE0F}",
+        "\u{1F608 FE0F}", "\u{1F609 FE0F}", "\u{1F60A FE0F}", "\u{1F60B FE0F}", "\u{1F60C FE0F}", "\u{1F60D FE0F}", "\u{1F60E FE0F}", "\u{1F60F FE0F}"
+       ]
 
     begin
       temperature_max = weather[i]['temperature']['max']['celsius']
       temperature_min = weather[i]['temperature']['min']['celsius']
     rescue
-      temperature_max ||= "--"
-      temperature_min ||= "--"
+      temperature_max ||= "#{face.sample}"
+      temperature_min ||= "#{face.sample}"
     end
     weather_forecast = "#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\n\n"
+    pp weather_forecast
   rescue
     weather_forecast ||= ""
   end
