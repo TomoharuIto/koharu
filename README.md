@@ -31,7 +31,7 @@ __KOHARU__(コハル)は、長野県内の天気予報を提供するTwitter bot
       ただし、質問に質問で返したり、質問に答えたのに全然別の話題を振ってきたりします。(汗)  
 
 ## Demo
-<img src="images/demo_dialogue.gif" alt="" width="300px">  
+<img src="images/demo_dialogue.gif" alt="" width="400px">  
 
 ## Author
 @TomoharuIto
