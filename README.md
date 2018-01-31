@@ -1,9 +1,5 @@
 # [KOHARU](https://twitter.com/koharu_esque)
 
-## Thanks
-Weather forecast API is provided by the __[Weather Hacks](http://weather.livedoor.com/weather_hacks/webservice)__  
-Dialogue API is provided by the __[docomo Developer support](https://dev.smt.docomo.ne.jp/?p=index)__  
-
 ## Overview
 __KOHARU__(コハル)は、長野県内の天気予報を提供するTwitter botです。  
 
@@ -32,6 +28,10 @@ __KOHARU__(コハル)は、長野県内の天気予報を提供するTwitter bot
 
 ## Demo
 <img src="images/demo_dialogue.gif" alt="" width="400px">  
+
+## Thanks
+Weather forecast API is provided by the __[Weather Hacks](http://weather.livedoor.com/weather_hacks/webservice)__  
+Dialogue API is provided by the __[docomo Developer support](https://dev.smt.docomo.ne.jp/?p=index)__  
 
 ## Author
 @TomoharuIto

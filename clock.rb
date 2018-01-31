@@ -56,10 +56,10 @@ module Weather
     "26" => "\u{26C4 FE0F}\/\u{2602 FE0F}", "27" => "\u{26C4 FE0F}→\u{2600 FE0F}", "28" => "\u{26C4 FE0F}→\u{2601 FE0F}",
     "29" => "\u{26C4 FE0F}→\u{2602 FE0F}", "30" => "\u{2603 FE0F}")
 
-face = [
-        "\u{1F600 FE0F}", "\u{1F601 FE0F}", "\u{1F602 FE0F}", "\u{1F603 FE0F}", "\u{1F604 FE0F}", "\u{1F605 FE0F}", "\u{1F606 FE0F}", "\u{1F607 FE0F}",
-        "\u{1F608 FE0F}", "\u{1F609 FE0F}", "\u{1F60A FE0F}", "\u{1F60B FE0F}", "\u{1F60C FE0F}", "\u{1F60D FE0F}", "\u{1F60E FE0F}", "\u{1F60F FE0F}"
-       ]
+    face = [
+      "\u{1F600 FE0F}", "\u{1F601 FE0F}", "\u{1F602 FE0F}", "\u{1F603 FE0F}", "\u{1F604 FE0F}", "\u{1F605 FE0F}", "\u{1F606 FE0F}", "\u{1F607 FE0F}",
+      "\u{1F608 FE0F}", "\u{1F609 FE0F}", "\u{1F60A FE0F}", "\u{1F60B FE0F}", "\u{1F60C FE0F}", "\u{1F60D FE0F}", "\u{1F60E FE0F}", "\u{1F60F FE0F}"
+        ]
 
     begin
       temperature_max = weather[i]['temperature']['max']['celsius']
@@ -69,7 +69,6 @@ face = [
       temperature_min ||= "#{face.sample}"
     end
     weather_forecast = "#{date}: #{announcement_time}\n天気: #{telop}#{emoji}\n気温: 最高#{temperature_max}℃ 最低#{temperature_min}℃\n\n"
-    pp weather_forecast
   rescue
     weather_forecast ||= ""
   end
@@ -87,26 +86,25 @@ central_city = central['location']['city']
 south_city = south['location']['city']
 
 
-today_north_weather = "北部: #{north_city}\n\n" << forecast(north, 0) << "Link: #{north_link}"
-today_central_weather = "中部: #{central_city}\n\n" << forecast(central, 0) << "Link: #{central_link}"
-today_south_weather = "南部: #{south_city}\n\n" << forecast(south, 0) << "Link: #{south_link}"
+today_north_weather = "北部: #{north_city}市\n\n" << forecast(north, 0) << "Link: #{north_link}"
+today_central_weather = "中部: #{central_city}市\n\n" << forecast(central, 0) << "Link: #{central_link}"
+today_south_weather = "南部: #{south_city}市\n\n" << forecast(south, 0) << "Link: #{south_link}"
 today_region_weather = ["#{today_north_weather}", "#{today_central_weather}", "#{today_south_weather}"].reverse
 
-tomorrow_north_weather = "北部: #{north_city}\n\n" << forecast(north, 1) << forecast(north, 2) << "Link: #{north_link}"
-tomorrow_central_weather = "中部: #{central_city}\n\n" << forecast(central, 1) << forecast(central, 2) << "Link: #{central_link}"
-tomorrow_south_weather = "南部: #{south_city}\n\n" << forecast(south, 1) << forecast(south, 2) << "Link: #{south_link}"
+tomorrow_north_weather = "北部: #{north_city}市\n\n" << forecast(north, 1) << forecast(north, 2) << "Link: #{north_link}"
+tomorrow_central_weather = "中部: #{central_city}市\n\n" << forecast(central, 1) << forecast(central, 2) << "Link: #{central_link}"
+tomorrow_south_weather = "南部: #{south_city}市\n\n" << forecast(south, 1) << forecast(south, 2) << "Link: #{south_link}"
 tomorrow_region_weather = ["#{tomorrow_north_weather}", "#{tomorrow_central_weather}", "#{tomorrow_south_weather}"].reverse
 
 date = Date.today
 weeks = %w(日 月 火 水 木 金 土)
 today = "#{date.month}月#{date.day}日#{weeks[date.wday]}曜日,お昼の天気予報をお伝えします。\n"
-suffix = %w(お を の もふ よ ぽ と)
 excuse = %w(ごめ～ん、文字数オーバーしちゃった。 わ～、文字数超過しちゃいました。 ごめんなさい、文字数オーバーのようです。)
 weather = central['description']['text'].gsub(/\s|。/,"\s" => "", "。" => "。\n")
 weather_forecast = (today << weather).scan(/^\d+.+?\D+$/m).reverse
 
 include Clockwork
-every(1.day, 'morning', :at => '09:00') do
+every(1.day, 'morning', :at => '8:00') do
   today_region_weather.each do  |par|
     begin
       client_rest.update(par)
