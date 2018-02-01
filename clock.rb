@@ -32,7 +32,7 @@ include Inquiry
 north = call(200010)
 central = call(200020)
 south = call(200030)
-
+pp north
 module Weather
   begin
   def forecast(area, i)
@@ -55,7 +55,6 @@ module Weather
     "22" => "\u{2614 FE0F}", "23" => "\u{26C4 FE0F}", "24" => "\u{26C4 FE0F}\/\u{2600 FE0F}", "25" => "\u{26C4 FE0F}\/\u{2601 FE0F}",
     "26" => "\u{26C4 FE0F}\/\u{2602 FE0F}", "27" => "\u{26C4 FE0F}→\u{2600 FE0F}", "28" => "\u{26C4 FE0F}→\u{2601 FE0F}",
     "29" => "\u{26C4 FE0F}→\u{2602 FE0F}", "30" => "\u{2603 FE0F}")
-
     face = [
       "\u{1F600 FE0F}", "\u{1F601 FE0F}", "\u{1F602 FE0F}", "\u{1F603 FE0F}", "\u{1F604 FE0F}", "\u{1F605 FE0F}", "\u{1F606 FE0F}", "\u{1F607 FE0F}",
       "\u{1F608 FE0F}", "\u{1F609 FE0F}", "\u{1F60A FE0F}", "\u{1F60B FE0F}", "\u{1F60C FE0F}", "\u{1F60D FE0F}", "\u{1F60E FE0F}", "\u{1F60F FE0F}"
