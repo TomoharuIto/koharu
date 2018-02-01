@@ -104,7 +104,7 @@ weather = central['description']['text'].gsub(/\s|。/,"\s" => "", "。" => "。
 weather_forecast = (today << weather).scan(/^\d+.+?\D+$/m).reverse
 
 include Clockwork
-every(1.day, 'morning', :at => '8:00') do
+every(1.day, 'morning', :at => '7:00') do
   today_region_weather.each do  |par|
     begin
       client_rest.update(par)
@@ -114,7 +114,7 @@ every(1.day, 'morning', :at => '8:00') do
   end
  end
 
-every(1.day, 'noon', :at => '12:30') do
+every(1.day, 'noon', :at => '13:00') do
   weather_forecast.each do |par|
     begin
       client_rest.update(par)
