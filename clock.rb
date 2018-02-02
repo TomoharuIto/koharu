@@ -66,6 +66,7 @@ module Weather
     weather_forecast ||= ""
   end
   end
+
 end
 
 include Weather
@@ -100,6 +101,7 @@ weather = central['description']['text'].gsub(/\s|。/,"\s" => "", "。" => "。
 weather_forecast = (today << weather).scan(/^\d+.+?\D+$/m).reverse
 
 include Clockwork
+
 every(1.day, 'morning', :at => '7:00') do
   today_region_weather.each do  |par|
     begin
