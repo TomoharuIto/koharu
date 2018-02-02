@@ -19,7 +19,8 @@ client_rest = Twitter::REST::Client.new(
 # Weather forecast API provided by Weather Hacks
 # http://weather.livedoor.com/weather_hacks/webservice
 
-module Inquiry
+module Weather
+
   def call(i)
     path = nil
     path = "http://weather.livedoor.com/forecast/webservice/json/v1?city=#{i}"
@@ -27,18 +28,9 @@ module Inquiry
     json = Net::HTTP.get(uri)
     JSON.parse(json)
   end
-end
 
-include Inquiry
-
-north = call(200010)
-central = call(200020)
-south = call(200030)
-
-module Weather
   begin
   def weather(area, i)
-    include Inquiry
     forecasts = area['forecasts']
     date = forecasts[i]['dateLabel']
     date_time = forecasts[i]['date']
@@ -78,6 +70,10 @@ end
 
 include Weather
 
+north = call(200010)
+central = call(200020)
+south = call(200030)
+
 north_link = north['link']
 central_link = central['link']
 south_link = south['link']
@@ -85,7 +81,6 @@ south_link = south['link']
 north_city = north['location']['city']
 central_city = central['location']['city']
 south_city = south['location']['city']
-
 
 today_north_weather = "北部: #{north_city}市\n\n" << weather(north, 0) << "Link: #{north_link}"
 today_central_weather = "中部: #{central_city}市\n\n" << weather(central, 0) << "Link: #{central_link}"
@@ -115,7 +110,7 @@ every(1.day, 'morning', :at => '7:00') do
   end
  end
 
-every(1.day, 'noon', :at => '13:00') do
+every(1.day, 'noon', :at => '12:00') do
   weather_forecast.each do |par|
     begin
       client_rest.update(par)
