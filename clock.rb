@@ -21,6 +21,7 @@ client_rest = Twitter::REST::Client.new(
 
 module Inquiry
   def call(i)
+    path = nil
     path = "http://weather.livedoor.com/forecast/webservice/json/v1?city=#{i}"
     uri = URI.parse(path)
     json = Net::HTTP.get(uri)
@@ -29,21 +30,22 @@ module Inquiry
 end
 
 include Inquiry
+
 north = call(200010)
 central = call(200020)
 south = call(200030)
-pp north
+
 module Weather
   begin
-  def forecast(area, i)
+  def weather(area, i)
     include Inquiry
-    weather = area['forecasts']
-    date = weather[i]['dateLabel']
-    date_time = weather[i]['date']
+    forecasts = area['forecasts']
+    date = forecasts[i]['dateLabel']
+    date_time = forecasts[i]['date']
     time = DateTime.parse(date_time)
     announcement_time = time.strftime("%m月%d日")
-    telop = weather[i]['telop']
-    image = weather[i]['image']['url']
+    telop = forecasts[i]['telop']
+    image = forecasts[i]['image']['url']
     num = image.delete("^0-9")
     emoji = num.gsub(num, "1" => "\u{2600 FE0F}", "2" => "\u{2600 FE0F}\/\u{2601 FE0F}", "3" => "\u{2600 FE0F}\/\u{2602 FE0F}",
     "4" => "\u{2600 FE0F}\/\u{26C4 FE0F}", "5" => "\u{2600 FE0F}→\u{2601 FE0F}", "6" => "\u{2600 FE0F}→\u{2602 FE0F}",
@@ -61,8 +63,8 @@ module Weather
         ]
 
     begin
-      temperature_max = weather[i]['temperature']['max']['celsius']
-      temperature_min = weather[i]['temperature']['min']['celsius']
+      temperature_max = forecasts[i]['temperature']['max']['celsius']
+      temperature_min = forecasts[i]['temperature']['min']['celsius']
     rescue
       temperature_max ||= "#{face.sample}"
       temperature_min ||= "#{face.sample}"
@@ -85,14 +87,14 @@ central_city = central['location']['city']
 south_city = south['location']['city']
 
 
-today_north_weather = "北部: #{north_city}市\n\n" << forecast(north, 0) << "Link: #{north_link}"
-today_central_weather = "中部: #{central_city}市\n\n" << forecast(central, 0) << "Link: #{central_link}"
-today_south_weather = "南部: #{south_city}市\n\n" << forecast(south, 0) << "Link: #{south_link}"
+today_north_weather = "北部: #{north_city}市\n\n" << weather(north, 0) << "Link: #{north_link}"
+today_central_weather = "中部: #{central_city}市\n\n" << weather(central, 0) << "Link: #{central_link}"
+today_south_weather = "南部: #{south_city}市\n\n" << weather(south, 0) << "Link: #{south_link}"
 today_region_weather = ["#{today_north_weather}", "#{today_central_weather}", "#{today_south_weather}"].reverse
 
-tomorrow_north_weather = "北部: #{north_city}市\n\n" << forecast(north, 1) << forecast(north, 2) << "Link: #{north_link}"
-tomorrow_central_weather = "中部: #{central_city}市\n\n" << forecast(central, 1) << forecast(central, 2) << "Link: #{central_link}"
-tomorrow_south_weather = "南部: #{south_city}市\n\n" << forecast(south, 1) << forecast(south, 2) << "Link: #{south_link}"
+tomorrow_north_weather = "北部: #{north_city}市\n\n" << weather(north, 1) << weather(north, 2) << "Link: #{north_link}"
+tomorrow_central_weather = "中部: #{central_city}市\n\n" << weather(central, 1) << weather(central, 2) << "Link: #{central_link}"
+tomorrow_south_weather = "南部: #{south_city}市\n\n" << weather(south, 1) << weather(south, 2) << "Link: #{south_link}"
 tomorrow_region_weather = ["#{tomorrow_north_weather}", "#{tomorrow_central_weather}", "#{tomorrow_south_weather}"].reverse
 
 date = Date.today
