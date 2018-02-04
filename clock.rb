@@ -22,11 +22,13 @@ client_rest = Twitter::REST::Client.new(
 module Weather
 
   def call(i)
-    path = nil
     path = "http://weather.livedoor.com/forecast/webservice/json/v1?city=#{i}"
     uri = URI.parse(path)
-    json = Net::HTTP.get(uri)
-    JSON.parse(json)
+    Net::HTTP.start(uri.host, uri.port) do |http|
+      res = http.get(uri, {'Cache-Control' => 'no-cache'})
+      body = res.body
+      JSON.parse(body)
+    end
   end
 
   begin
@@ -97,8 +99,8 @@ date = Date.today
 weeks = %w(日 月 火 水 木 金 土)
 today = "#{date.month}月#{date.day}日#{weeks[date.wday]}曜日,お昼の天気予報をお伝えします。\n"
 excuse = %w(ごめ～ん、文字数オーバーしちゃった。 わ～、文字数超過しちゃいました。 ごめんなさい、文字数オーバーのようです。)
-weather = central['description']['text'].gsub(/\s|。/,"\s" => "", "。" => "。\n")
-weather_forecast = (today << weather).scan(/^\d+.+?\D+$/m).reverse
+text = central['description']['text'].gsub(/\s|。/,"\s" => "", "。" => "。\n")
+weather_forecast = (today << text).scan(/^\d+.+?\D+$/m).reverse
 
 include Clockwork
 
