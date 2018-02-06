@@ -60,9 +60,7 @@ module Weather
       "\u{1F61C FE0F}", "\u{1F61D FE0F}", "\u{1F61E FE0F}", "\u{1F61F FE0F}", "\u{1F620 FE0F}", "\u{1F621 FE0F}", "\u{1F622 FE0F}",
       "\u{1F623 FE0F}", "\u{1F624 FE0F}", "\u{1F625 FE0F}", "\u{1F626 FE0F}", "\u{1F627 FE0F}", "\u{1F628 FE0F}", "\u{1F629 FE0F}",
       "\u{1F62A FE0F}", "\u{1F62B FE0F}", "\u{1F62C FE0F}", "\u{1F62D FE0F}", "\u{1F62E FE0F}", "\u{1F62F FE0F}", "\u{1F630 FE0F}",
-      "\u{1F631 FE0F}", "\u{1F632 FE0F}", "\u{1F633 FE0F}", "\u{1F634 FE0F}", "\u{1F635 FE0F}", "\u{1F636 FE0F}", "\u{1F637 FE0F}",
-      "\u{1F638 FE0F}", "\u{1F639 FE0F}", "\u{1F63A FE0F}", "\u{1F63B FE0F}", "\u{1F63C FE0F}", "\u{1F63D FE0F}", "\u{1F63E FE0F}",
-      "\u{1F63F FE0F}", "\u{1F641 FE0F}", "\u{1F642 FE0F}", "\u{1F643 FE0F}", "\u{1F644 FE0F}"
+      "\u{1F631 FE0F}", "\u{1F632 FE0F}", "\u{1F633 FE0F}", "\u{1F634 FE0F}", "\u{1F635 FE0F}", "\u{1F636 FE0F}", "\u{1F637 FE0F}"
         ]
 
     begin
