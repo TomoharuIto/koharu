@@ -26,7 +26,7 @@ module Weather
     uri = URI.parse(path)
     res = nil
     Net::HTTP.start(uri.host, uri.port) do |http|
-      res = http.get(uri, {'Cache-Control' => 'no-cache', 'Pragma' => 'no-cache'})
+      res = http.get(uri, {'Cache-Control' => 'no-cache, no-store', 'Pragma' => 'no-cache'})
       body = res.body
       JSON.parse(body)
     end
