@@ -25,8 +25,9 @@ module Weather
     path = "http://weather.livedoor.com/forecast/webservice/json/v1?city=#{i}"
     uri = URI.parse(path)
     res = nil
+    metadata = {'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0', 'Pragma' => 'no-cache'}
     Net::HTTP.start(uri.host, uri.port) do |http|
-      res = http.get(uri, {'Cache-Control' => 'no-cache, no-store', 'Pragma' => 'no-cache'})
+      res = http.get(uri, metadata)
       body = res.body
       JSON.parse(body)
     end
