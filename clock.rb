@@ -5,7 +5,9 @@ require 'json'
 require 'net/http'
 require 'twitter'
 require 'uri'
-require 'pp'
+# require 'pp'
+
+include Clockwork
 
 Dotenv.load
 client_rest = Twitter::REST::Client.new(
@@ -106,11 +108,9 @@ tomorrow_region_weather = ["#{tomorrow_north_weather}", "#{tomorrow_central_weat
 date = Date.today
 weeks = %w(日 月 火 水 木 金 土)
 today = "#{date.month}月#{date.day}日#{weeks[date.wday]}曜日,お昼の天気予報をお伝えします。\n"
-excuse = %w(ごめ～ん、文字数オーバーしちゃった。 わ～、文字数超過しちゃいました。 ごめんなさい、文字数オーバーのようです。)
 text = central['description']['text'].gsub(/\s|。/,"\s" => "", "。" => "。\n")
+excuse = %w(ごめ～ん、文字数オーバーしちゃった。 わ～、文字数超過しちゃいました。 ごめんなさい、文字数オーバーのようです。)
 weather_forecast = (today << text).scan(/^\d+.+?\D+$/m).reverse
-
-include Clockwork
 
 every(1.day, 'morning', :at => '7:00') do
   today_region_weather.each do  |par|
