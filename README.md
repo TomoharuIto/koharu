@@ -46,7 +46,7 @@ Weather forecast API is provided by the __[Weather Hacks](http://weather.livedoo
 Dialogue API is provided by the __[docomo Developer support](https://dev.smt.docomo.ne.jp/?p=index)__  
 
 ## Author
-@TomoharuIto
+@Lunys
 
 ## LICENSE
-__&copy; 2018 TomoharuIto All rights reserved__
+__&copy; 2018 Lunys All rights reserved__
